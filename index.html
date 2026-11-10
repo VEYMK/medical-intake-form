@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Предварительная регистрация пациента в медцентре: онлайн-анкета с проверкой полей и автосохранением черновика.">
+  <meta name="theme-color" content="#0f766e">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'">
+  <title>Анкета пациента — Медцентр «Здоровье»</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#intake-form">Перейти к анкете</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#main" aria-label="Медцентр «Здоровье» — к началу страницы">
+        <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+          <rect width="48" height="48" rx="14" fill="#0f766e"/>
+          <path d="M24 11v26M11 24h26" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-text">
+          <strong>Медцентр «Здоровье»</strong>
+          <span>Предварительная регистрация</span>
+        </span>
+      </a>
+      <div class="header-contact">
+        <span class="header-hours">Пн–Сб, 8:00–20:00</span>
+        <a class="header-phone" href="tel:+74951234567">+7 (495) 123-45-67</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container layout">
+    <aside class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Онлайн-анкета · около 5 минут</p>
+      <h1 id="page-title">Заполните анкету перед первым визитом</h1>
+      <p class="lead">
+        Врач увидит ваши данные до приёма и сможет подготовиться. Все обязательные
+        поля отмечены звёздочкой, а черновик сохраняется автоматически.
+      </p>
+
+      <ul class="assurance-list">
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 3l7 3v6c0 4.4-3 7.5-7 9-4-1.5-7-4.6-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Данные передаются только сотрудникам медцентра</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M4 7h16M4 12h16M4 17h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span>Черновик сохраняется на этом устройстве</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span>Администратор свяжется с вами в течение рабочего дня</span>
+        </li>
+      </ul>
+
+      <nav class="section-nav" aria-label="Разделы анкеты">
+        <p class="section-nav-title">Разделы</p>
+        <ol id="section-nav-list"></ol>
+      </nav>
+
+      <div class="progress-card">
+        <div class="progress-head">
+          <span>Заполнение</span>
+          <span id="progress-text">0 из 0</span>
+        </div>
+        <div class="progress-track" id="progress-track" role="progressbar"
+             aria-labelledby="progress-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <p class="progress-hint" id="progress-label">Обязательные поля отмечены звёздочкой.</p>
+      </div>
+
+      <div class="help-card">
+        <h2>Нужна помощь?</h2>
+        <p>Позвоните администратору — подскажем, какие документы взять на первый визит.</p>
+        <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+      </div>
+    </aside>
+
+    <div class="form-column">
+      <div class="banner banner--info" id="draft-banner" role="status" hidden>
+        <div>
+          <strong>Черновик восстановлен.</strong>
+          <span id="draft-banner-text"></span>
+        </div>
+        <div class="banner-actions">
+          <button type="button" class="btn btn--ghost" id="draft-banner-clear">Очистить черновик</button>
+          <button type="button" class="btn btn--ghost" id="draft-banner-hide">Скрыть</button>
+        </div>
+      </div>
+
+      <div class="banner banner--warning" id="external-draft-banner" role="status" hidden>
+        <div>
+          <strong>Черновик обновлён в другой вкладке.</strong>
+          Чтобы не потерять изменения, обновите страницу.
+        </div>
+        <div class="banner-actions">
+          <button type="button" class="btn btn--secondary" id="external-draft-reload">Обновить страницу</button>
+        </div>
+      </div>
+
+      <div class="error-summary" id="error-summary" role="alert" tabindex="-1" hidden>
+        <h2>Проверьте форму</h2>
+        <p>Некоторые поля заполнены неверно. Перейдите к ним по ссылкам:</p>
+        <ul id="error-list"></ul>
+      </div>
+
+      <form id="intake-form" novalidate aria-labelledby="page-title" tabindex="-1" data-endpoint="">
+        <div id="form-root">
+          <noscript>
+            <p class="noscript">
+              Для заполнения анкеты включите JavaScript в браузере или позвоните
+              администратору по телефону <a href="tel:+74951234567">+7 (495) 123-45-67</a>.
+            </p>
+          </noscript>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary" id="submit-button">
+            <span class="btn-label">Отправить анкету</span>
+          </button>
+          <button type="button" class="btn btn--secondary" id="save-draft">Сохранить черновик</button>
+          <button type="button" class="btn btn--ghost" id="clear-form">Очистить</button>
+          <span class="save-status" id="save-status" role="status" aria-live="polite">Автосохранение включено</span>
+        </div>
+
+        <label class="draft-toggle">
+          <input type="checkbox" id="draft-enabled" checked>
+          <span>Сохранять черновик в этом браузере</span>
+        </label>
+
+        <p class="privacy-note">
+          Нажимая «Отправить анкету», вы подтверждаете согласие на обработку
+          персональных данных.
+          <button type="button" class="btn--link" id="privacy-open">Политика обработки данных</button>.
+        </p>
+      </form>
+
+      <section class="success" id="success" aria-labelledby="success-title" tabindex="-1" hidden>
+        <div class="success-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p class="eyebrow">Анкета отправлена</p>
+        <h2 id="success-title">Спасибо! Мы получили ваши данные</h2>
+        <p class="success-lead">Администратор свяжется с вами в течение рабочего дня, чтобы подтвердить дату и время приёма.</p>
+        <p class="success-reference">Номер заявки: <strong id="success-reference">—</strong></p>
+        <dl class="success-summary" id="success-summary"></dl>
+        <div class="success-actions">
+          <button type="button" class="btn btn--primary" id="success-new">Заполнить новую анкету</button>
+          <button type="button" class="btn btn--secondary" id="success-print">Распечатать</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Медцентр «Здоровье». Демонстрационный проект.</p>
+      <p>
+        <button type="button" class="btn--link" id="privacy-open-footer">Политика обработки данных</button>
+        <span aria-hidden="true"> · </span>
+        <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+      </p>
+    </div>
+  </footer>
+
+  <dialog id="clear-dialog" class="dialog" aria-labelledby="clear-title" aria-describedby="clear-desc">
+    <div class="dialog-body">
+      <h2 id="clear-title">Очистить анкету?</h2>
+      <p id="clear-desc">
+        Все введённые данные и сохранённый черновик будут удалены.
+        Это действие нельзя отменить.
+      </p>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn--secondary" id="clear-cancel">Отмена</button>
+        <button type="button" class="btn btn--danger" id="clear-confirm">Очистить</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="privacy-dialog" class="dialog" aria-labelledby="privacy-title">
+    <div class="dialog-body">
+      <h2 id="privacy-title">Политика обработки персональных данных</h2>
+      <p>
+        Это демонстрационный проект. В реальном медицинском учреждении анкета
+        должна отправляться по защищённому каналу, а доступ к данным — иметь
+        только уполномоченные сотрудники.
+      </p>
+      <ul class="dialog-list">
+        <li>Данные используются исключительно для записи на приём и подготовки врача.</li>
+        <li>Черновик хранится локально в вашем браузере и удаляется после отправки.</li>
+        <li>Согласие на обработку данных не сохраняется в черновике — его нужно подтвердить заново.</li>
+        <li>Вы можете очистить черновик в любой момент кнопкой «Очистить».</li>
+      </ul>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn--primary" id="privacy-close">Понятно</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="sr-status" class="visually-hidden" role="status" aria-live="polite"></div>
+</body>
+</html>
