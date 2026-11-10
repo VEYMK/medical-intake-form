@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/VEYMK/medical-intake-form/actions/workflows/ci.yml/badge.svg)](https://github.com/VEYMK/medical-intake-form/actions/workflows/ci.yml)
 
+**Live demo:** <https://veymk.github.io/medical-intake-form/>
+
 Динамическая анкета пациента для медицинского центра: семантический HTML, адаптивная
 вёрстка на CSS Grid/Flexbox, валидация на чистом JavaScript, маска телефона и
 автосохранение черновика в `localStorage`.
