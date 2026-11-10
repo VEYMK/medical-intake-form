@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Schema-driven medical intake form: semantic HTML, responsive CSS, vanilla JS validation, localStorage drafts, Docker and CI.",
   "scripts": {
-    "start": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "start": "node scripts/build.mjs && node scripts/serve.mjs",
     "test": "node --test",
     "check": "node scripts/check.mjs"
   },

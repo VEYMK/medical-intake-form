@@ -14,12 +14,14 @@ check(/<main\b/.test(html), "index.html must contain a <main> landmark");
 check((html.match(/<h1\b/g) ?? []).length === 1, "index.html must contain exactly one <h1>");
 check(/<form[^>]+novalidate/.test(html), "the form must use novalidate and custom validation");
 check(/aria-live="polite"/.test(html), "a polite live region is required for status messages");
+check(/src="js\/bundle\.js"/.test(html), "index.html must load the classic bundle so file:// works");
 
 const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
 check(new Set(ids).size === ids.length, "element IDs must be unique");
 
 const localAssets = [
   "css/styles.css",
+  "js/bundle.js",
   "js/app.js",
   "js/schema.js",
   "js/form-builder.js",
