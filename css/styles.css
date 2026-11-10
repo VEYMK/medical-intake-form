@@ -1088,6 +1088,13 @@ select {
     border: 1px solid ButtonText;
   }
 
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
   .choice:has(input:checked) {
     outline: 2px solid Highlight;
   }
